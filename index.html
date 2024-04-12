@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Stone Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            height: 90%;
+            width: 90%;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .player {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .top-player {
+            justify-content: flex-start;
+        }
+        .bottom-player {
+            justify-content: flex-end;
+        }
+        .card-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="result" id="result1"></div>
+        <div class="player top-player" id="player1">
+            <div class="card-container">
+                <div class="card" onclick="selectCard('rock', 'player1')">Rock</div>
+                <div class="card" onclick="selectCard('paper', 'player1')">Paper</div>
+                <div class="card" onclick="selectCard('scissors', 'player1')">Scissors</div>
+            </div>
+        </div>
+        
+        <div class="score" id="score"></div>
+     
+        <div class="player bottom-player" id="player2">
+            <div class="card-container">
+                <div class="card" onclick="selectCard('rock', 'player2')">Rock</div>
+                <div class="card" onclick="selectCard('paper', 'player2')">Paper</div>
+                <div class="card" onclick="selectCard('scissors', 'player2')">Scissors</div>
+            </div>
+        </div>
+           <div class="result" id="result2"></div>
+    </div>
+
+    <script>
+        let player1Selection = null;
+        let player2Selection = null;
+        let round = 1;
+        let player1Score = 0;
+        let player2Score = 0;
+
+        function selectCard(card, player) {
+            if (player === 'player1') {
+                player1Selection = card;
+                document.getElementById('result1').innerText = card;
+            } else if (player === 'player2') {
+                player2Selection = card;
+                document.getElementById('result2').innerText = card;
+            }
+
+            if (player1Selection && player2Selection) {
+                determineWinner();
+            }
+        }
+
+        function determineWinner() {
+            let result = '';
+            if (player1Selection === player2Selection) {
+                result = 'It\'s a tie!';
+            } else if (
+                (player1Selection === 'rock' && player2Selection === 'scissors') ||
+                (player1Selection === 'paper' && player2Selection === 'rock') ||
+                (player1Selection === 'scissors' && player2Selection === 'paper')
+            ) {
+                result = 'Player 1 wins!';
+                player1Score++;
+            } else {
+                result = 'Player 2 wins!';
+                player2Score++;
+            }
+
+            document.getElementById('result1').innerText = result;
+            document.getElementById('result2').innerText = result;
+
+            // Display round score
+            document.getElementById('score').innerText = 'Round ' + round + '\n' + ' Score: ' + player1Score + ' - ' + player2Score;
+
+            // Reset selections
+            player1Selection = null;
+            player2Selection = null;
+
+            // Move to the next round or end the game
+            round++;
+            if (round > 6) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            // Display final winner
+            let finalResult = '';
+            if (player1Score === player2Score) {
+                finalResult = 'It\'s a tie!';
+            } else if (player1Score > player2Score) {
+                finalResult = 'Player 1 wins!';
+            } else {
+                finalResult = 'Player 2 wins!';
+            }
+            document.getElementById('result1').innerText = finalResult;
+            document.getElementById('result2').innerText = finalResult;
+
+            // Disable card selection
+            let cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.pointerEvents = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
