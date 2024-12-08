@@ -1,0 +1,341 @@
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  background-color: black;
+  overflow: hidden;
+  position: relative;
+}
+
+#game-container {
+  position: relative;
+  width: 80vw;
+  height: 80vw;
+  border-radius: 0px;
+  border: 0.5px solid white;
+  overflow: hidden;
+  background-color: black;
+}
+
+.snake-head {
+  background: linear-gradient(135deg, #2e8b57, #006400);
+  /* Deeper green with more natural gradient */
+  border-radius: 50%;
+  /* Keep it round */
+  width: 5vw;
+  /* Fixed size */
+  height: 5vw;
+  /* Fixed size */
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7), inset 0px 0px 3px rgba(0, 0, 0, 0.5);
+  /* Enhanced shadow for depth */
+  border-radius: 30%;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0) 60%);
+  /* Darker center for depth */
+}
+
+.snake-head:before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  /* Adjusted for positioning */
+  left: 5px;
+  /* Adjusted for positioning */
+  width: 5px;
+  /* Smaller eye for 20px head */
+  height: 5px;
+  /* Smaller eye for 20px head */
+  background-color: white;
+  border-radius: 50%;
+  /* Mimicking an eye */
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  /* Smaller shadow */
+}
+
+.snake-head:after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  /* Adjusted for positioning */
+  left: 7px;
+  /* Adjusted for positioning */
+  width: 3px;
+  /* Smaller pupil for 20px head */
+  height: 3px;
+  /* Smaller pupil for 20px head */
+  background-color: black;
+  border-radius: 50%;
+  /* Small pupil */
+}
+
+.snake {
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  /* Gradient for the body (snake green) */
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.4);
+  /* Adding depth */
+}
+
+.snake.transparent {
+  opacity: 0.5;
+}
+
+.snake-tail {
+  background: linear-gradient(135deg, #228B22, #006400);
+  /* Gradient for the tail (darker green) */
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  /* Slightly tapered tail */
+  transform-origin: center;
+  border-radius: 3px;
+}
+
+.food {
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.heart-food {
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  clip-path: polygon(50% 0%, 0% 35%, 50% 100%, 100% 35%);
+  background-color: blue;
+}
+
+#score {
+  font-size: 30px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 2vh;
+  margin-top: 2vh;
+}
+
+
+.blink-border {
+  animation: blinkBorder 1s linear 0s infinite;
+}
+
+#button-place {
+  display: flex;
+  justify-content: space-between;
+  /* Space between buttons */
+  align-items: center;
+  /* Center vertically */
+  position: relative;
+  width: 80vw;
+  /* Adjust width as needed */
+  height: auto;
+  /* Adjust height as needed */
+  margin-top: 2vh;
+  background-color: black;
+  padding: 0 20px;
+  /* Add padding for spacing inside the container */
+}
+
+#mainBtn {
+  width: 12vw;
+  height: 12vw;
+  background-color: black;
+  color: white;
+  border: 0.5px solid white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pause-btn {
+  width: 12vw;
+  height: 12vw;
+  background-color: black;
+  color: white;
+  border: 0.5px solid white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#pause-btn:hover {
+  background-color: #555555;
+}
+
+@keyframes blinkBorder {
+  0% {
+    border-color: white;
+  }
+
+  50% {
+    border-color: red;
+    /* Color of the border when it blinks */
+  }
+
+  100% {
+    border-color: white;
+  }
+}
+
+#mainBtn i {
+  transition: transform 0.5s ease;
+  /* Add smooth rotation effect */
+}
+
+.rotate-icon {
+  transform: rotate(90deg);
+  /* Rotate the icon */
+}
+
+#tableDrawer {
+  position: absolute;
+  top: 0;
+  left: 17vw;
+  /* Positioned relative to the Main button */
+  height: 12vw;
+  width: 0px;
+  /* Initially closed */
+  display: flex;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  overflow: hidden;
+  /* Hide overflowing elements when closed */
+  transition: width 0.5s ease-in-out;
+  /* Smooth opening/closing */
+  z-index: 1;
+}
+
+.drawerBtn {
+  flex: 1;
+  width: 12vw;
+  background-color: black;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  border: 0.5px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#control-place {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  flex-grow: 1;
+  position: relative;
+}
+
+#joystick {
+  width: 50vw;
+  height: 50vw;
+  background-color: #333;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Center horizontally */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.joystick-inner {
+  width: 30vw;
+  height: 30vw;
+  background-color: #444;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.joystick-ball {
+  width: 10vw;
+  height: 10vw;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  transition: all 0.1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#arrowControls {
+  display: grid;
+  grid-template-columns: repeat(3, 24vw);
+  /* Keep the grid layout */
+  grid-template-rows: 24vw 24vw 24vw;
+  /* Keep the grid layout */
+  justify-items: center;
+  align-items: center;
+  position: absolute;
+  gap: 2vw;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Center horizontally */
+}
+
+#arrowControls button {
+  font-size: 24px;
+  width: 22vw;
+  height: 22vw;
+  background-color: black;
+  color: white;
+  border: 0.5px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow-btn i {
+  font-size: 28px;
+  /* Adjust size of icons */
+}
+
+#upArrow {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+#downArrow {
+  grid-row: 3;
+  grid-column: 2;
+}
+
+#leftArrow {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+#rightArrow {
+  grid-row: 2;
+  grid-column: 3;
+    }
