@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Scores</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, rgba(0, 128, 0, 1) 0%, rgba(0, 102, 0, 1) 40%, rgba(0, 51, 0, 1) 70%, rgba(0, 0, 0, 1) 100%);
+        /* Balanced darker light green gradient */
+        color: #fff;
+        height: 100vh;
+        overflow: hidden;
+        /* Prevent scrolling */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .back-button {
+        position: absolute;
+        top: 6vw;
+        left: 6vw;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .back-button svg {
+        width: 30px;
+        height: 30px;
+        fill: #fff;
+    }
+
+    .back-button:hover {
+        transform: scale(1.1);
+        /* Slight hover effect for the back button */
+    }
+
+    .title {
+        margin: 20px 0;
+        font-size: 8vw;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        /* Adding text shadow for depth */
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 4vw 12vw;
+        background: #43a047;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Subtle shadow for depth */
+    }
+
+    .tab.active {
+        background: #1b5e20;
+        /* Darker green for the active tab */
+        transform: translateY(-3px);
+        /* Slight lift effect for the active tab */
+    }
+
+    .tab:hover {
+        background: #388e3c;
+        /* Darker shade on hover */
+        transform: translateY(-3px);
+        /* Lift effect on hover */
+    }
+
+    .table-container {
+        width: 80%;
+        max-width: 600px;
+        height: auto;
+        max-height: 80vh;
+        /* Adjust the height to allow for flexible content */
+        overflow-y: auto;
+        /* Enable scrolling if needed */
+        background: linear-gradient(to bottom right, #00ff0d, #ffffff);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        /* Larger shadow for the table container */
+        color: black;
+        padding: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .table-container:hover {
+        transform: scale(1.02);
+        /* Slight scale effect when hovering over the table container */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    table th,
+    table td {
+        padding: 15px;
+        text-align: center;
+        /* Center the content horizontally */
+        vertical-align: middle;
+        /* Center the content vertically */
+        border: 1px solid #333;
+        /* Darker border color */
+        font-size: 16px;
+        /* Increased font size for better readability */
+    }
+
+    table th {
+        font-weight: bold;
+        color: #fff;
+        /* White text for header */
+        background: #064d00;
+        /* Darker background for headers */
+        text-transform: uppercase;
+        /* Adds a professional look */
+        box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+        /* Subtle inner shadow for header */
+    }
+
+    table tbody tr:nth-child(odd) {
+        background: #ffffff;
+        /* Darker green for odd rows */
+    }
+
+    table tbody tr:nth-child(even) {
+        background: #ffffff;
+        /* Slightly darker green for even rows */
+    }
+
+    table tbody tr:hover {
+        background: #4caf50;
+        /* Highlight rows on hover */
+        transition: background 0.3s ease;
+        /* Smooth transition for hover effect */
+    }
+</style>
+
+<body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+        </svg>
+    </button>
+
+    <!-- Page Title -->
+    <h1 class="title">Legends</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" id="local-tab" onclick="switchTab('local')">Local</div>
+        <div class="tab" id="global-tab" onclick="switchTab('global')">Global</div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="scoreTable">
+                <!-- Scores will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const localTab = document.getElementById('local-tab');
+            const globalTab = document.getElementById('global-tab');
+            const scoreTable = document.getElementById('scoreTable');
+
+            // Reset active class for both tabs
+            localTab.classList.remove('active');
+            globalTab.classList.remove('active');
+
+            // Add active class to the selected tab
+            if (tab === 'local') {
+                localTab.classList.add('active');
+                populateScores('local');
+            } else if (tab === 'global') {
+                globalTab.classList.add('active');
+                populateScores('global');
+            }
+        }
+
+        // Dummy function to populate scores based on the tab
+        function populateScores(tab) {
+            const scoreTable = document.getElementById('scoreTable');
+            scoreTable.innerHTML = ''; // Clear the table
+
+            if (tab === 'local') {
+                scoreTable.innerHTML = `
+          <tr>
+            <td>1</td>
+            <td>Player A</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Player B</td>
+            <td>800</td>
+          </tr>
+        `;
+            } else if (tab === 'global') {
+                scoreTable.innerHTML = `
+          <tr>
+            <td>1</td>
+            <td>Player X</td>
+            <td>5000</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Player Y</td>
+            <td>4000</td>
+          </tr>
+        `;
+            }
+        }
+
+        // Initialize with local scores
+        populateScores('local');
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        // DOM Elements
+        const scoreTable = document.getElementById("scoreTable");
+        const localTab = document.getElementById("local-tab");
+        const globalTab = document.getElementById("global-tab");
+
+        // Prompt for User Name on First Visit
+        if (!localStorage.getItem("userName")) {
+            const userName = prompt("Enter your name:");
+            if (userName) {
+                localStorage.setItem("userName", userName);
+            }
+        }
+
+        // Fetch Local Scores from localStorage
+        function showLocalScores() {
+            activateTab("local-tab");
+            const localScores = JSON.parse(localStorage.getItem("highScores")) || [];
+            populateTable(localScores);
+
+            // Sync local scores to Firebase if online
+            if (navigator.onLine) {
+                localScores.forEach((score) => {
+                    const scoreRef = database.ref("globalScores").push();
+                    scoreRef.set(score);
+                });
+            }
+        }
+
+        // Fetch Global Scores from Firebase
+        function showGlobalScores() {
+            activateTab("global-tab");
+            database
+                .ref("globalScores")
+                .once("value")
+                .then((snapshot) => {
+                    const globalScores = [];
+                    snapshot.forEach((childSnapshot) => {
+                        globalScores.push(childSnapshot.val());
+                    });
+                    populateTable(globalScores);
+                });
+        }
+
+        // Populate Scores Table
+        function populateTable(scores) {
+            scoreTable.innerHTML = "";
+            scores.sort((a, b) => b.score - a.score).forEach((score, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = <td>${index + 1}</td><td>${score.name}</td><td>${score.score}</td>;
+                scoreTable.appendChild(row);
+            });
+        }
+    </script>
+</body>
+
+</html>
